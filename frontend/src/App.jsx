@@ -158,57 +158,15 @@ function Landing({ onChat }) {
 
 
 /* ═══════════════════════════════════════════════════
-   LOGIN / SIGNUP PAGE
+   LOGIN PAGE — Google OAuth
    ═══════════════════════════════════════════════════ */
 
-function LoginPage({ onSuccess, onBack }) {
-  const [mode, setMode] = useState("login"); // "login" or "signup"
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      if (mode === "signup") {
-        // Step 1: Create user in DB
-        const r1 = await api("/auth/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name }),
-        });
-        if (!r1.ok) {
-          const d = await r1.json();
-          throw new Error(d.detail);
-        }
-      }
-
-      // Step 2: Login (creates session + sets cookie)
-      const r2 = await api("/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      if (!r2.ok) {
-        const d = await r2.json();
-        throw new Error(d.detail);
-      }
-
-      // Step 3: Fetch user info (cookie is now set)
-      const r3 = await api("/auth/me");
-      if (r3.ok) {
-        const user = await r3.json();
-        onSuccess(user);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+function LoginPage({ onBack }) {
+  // Google login: just redirect to our backend, which redirects to Google.
+  // After Google login, the backend sets the cookie and redirects back here.
+  // No form, no email input, no signup — Google handles identity.
+  const handleGoogleLogin = () => {
+    window.location.href = `${BASE}/auth/google/login`;
   };
 
   return (
@@ -230,53 +188,24 @@ function LoginPage({ onSuccess, onBack }) {
           <div className="login-card__icon">
             <Bolt stroke="currentColor" strokeWidth="2" />
           </div>
-          <h2 className="login-card__title">
-            {mode === "login" ? "Welcome back" : "Create your account"}
-          </h2>
+          <h2 className="login-card__title">Welcome to AgentFlow</h2>
           <p className="login-card__sub">
-            {mode === "login"
-              ? "Enter your email to continue"
-              : "Sign up to start using AgentFlow"}
+            Sign in with your Google account to continue
           </p>
 
-          <form className="login-form" onSubmit={handleSubmit}>
-            {mode === "signup" && (
-              <input
-                className="login-input"
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            )}
-            <input
-              className="login-input"
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            {error && <div className="login-error">{error}</div>}
-
-            <button className="login-submit" type="submit" disabled={loading}>
-              {loading ? "Please wait..." : mode === "login" ? "Log in" : "Sign up"}
-            </button>
-          </form>
-
-          <div className="login-switch">
-            {mode === "login" ? (
-              <>Don't have an account? <button onClick={() => { setMode("signup"); setError(""); }}>Sign up</button></>
-            ) : (
-              <>Already have an account? <button onClick={() => { setMode("login"); setError(""); }}>Log in</button></>
-            )}
-          </div>
+          <button className="login-google" onClick={handleGoogleLogin}>
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
 
           <div className="login-note">
-            Phase 1: Simple email login (no password).<br />
-            Phase 2 will add Google OAuth.
+            Your Google account verifies your identity.
+            We never see your Google password.
           </div>
         </motion.div>
       </div>
@@ -442,8 +371,6 @@ export default function App() {
 
   const goHome = () => { setPage("landing"); window.scrollTo(0, 0); };
 
-  const handleLogin = (u) => { setUser(u); setPage("chat"); window.scrollTo(0, 0); };
-
   const handleLogout = () => { setUser(null); setPage("landing"); window.scrollTo(0, 0); };
 
   return (
@@ -455,7 +382,7 @@ export default function App() {
       )}
       {page === "login" && (
         <motion.div key="a" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-          <LoginPage onSuccess={handleLogin} onBack={goHome} />
+          <LoginPage onBack={goHome} />
         </motion.div>
       )}
       {page === "chat" && user && (

@@ -1,49 +1,56 @@
 """
-Simple email login — Phase 1 (no Google yet).
+Google OAuth Login — Phase 2.
 
-We start with basic signup/login to teach HOW sessions work:
-  - What happens in the database when you sign up
-  - What a session token is and where it's stored
-  - How a cookie carries the session on every request
-  - What logout actually does (delete from DB + clear cookie)
+What changed from Phase 1:
+  - REMOVED: POST /auth/signup (no manual user creation)
+  - REMOVED: POST /auth/login  (no trusting emails blindly)
+  - ADDED:   GET  /auth/google/login   → redirects to Google's login page
+  - ADDED:   GET  /auth/callback       → Google sends user back here with a code
 
-Later (Phase 2) we'll replace this with Google OAuth.
-Same session mechanics — just a different way to prove "I am alice@gmail.com".
+What DIDN'T change:
+  - _create_session()  → still the same token + cookie logic
+  - POST /auth/logout  → still deletes session + clears cookie
+  - GET  /auth/me      → still reads cookie + looks up session
 
-Endpoints:
-  POST /auth/signup    → Create a new user (email + name)
-  POST /auth/login     → Login with email → create session → set cookie
-  POST /auth/logout    → Delete session from DB → clear cookie
-  GET  /auth/me        → Read cookie → lookup session → return user
+The session/cookie mechanism is IDENTICAL to Phase 1.
+The only difference is WHO verifies the user's identity:
+  Phase 1: we trusted whatever email the user typed
+  Phase 2: Google confirms "this person is really priya@gmail.com"
 """
 
 import secrets
 from datetime import datetime, timezone, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from pydantic import BaseModel
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session as DBSession
+from authlib.integrations.requests_client import OAuth2Session
 
 from database import get_db
 from models import User, SessionRecord
+from config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 SESSION_DURATION_HOURS = 24
 
+# Google's OIDC endpoints (these are standard, never change)
+GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
 
-# ── Request schemas ──────────────────────────────────
+# Where Google sends the user back after they log in
+REDIRECT_URI = "http://localhost:8000/auth/callback"
 
-class SignupRequest(BaseModel):
-    email: str
-    name: str
+# Where to send the user after login/logout completes
+FRONTEND_URL = "http://localhost:5173"
 
-
-class LoginRequest(BaseModel):
-    email: str
+# Temporary store for CSRF state values (production: use Redis)
+pending_states: dict[str, bool] = {}
 
 
 # ── Helper: create session + set cookie ──────────────
+# THIS IS IDENTICAL TO PHASE 1 — not a single line changed
 
 def _create_session(user: User, response: Response, db: DBSession):
     """
@@ -82,70 +89,98 @@ def _create_session(user: User, response: Response, db: DBSession):
     )
 
 
-# ==================== SIGNUP ====================
+# ==================== GOOGLE LOGIN (replaces /signup + /login) ====================
 
-@router.post("/signup")
-def signup(req: SignupRequest, db: DBSession = Depends(get_db)):
+@router.get("/google/login")
+def google_login():
     """
-    Create a new user in the database.
+    Step 1 of Google login: redirect the user to Google's login page.
 
-    What happens in the DB:
-      INSERT INTO users (email, name) VALUES ('alice@test.com', 'Alice')
-
-    No password for now — we're focusing on the session mechanism.
-    In Phase 2, Google will verify identity instead of a password.
+    When the user clicks "Login with Google" on the frontend,
+    the frontend redirects to this endpoint. We then redirect
+    the browser to Google with:
+      - client_id: so Google knows which app is asking
+      - redirect_uri: where to send the user back after login
+      - scope: what info we want (email, name, profile picture)
+      - state: random string to prevent CSRF attacks
     """
-    # Check if user already exists
-    existing = db.query(User).filter(User.email == req.email).first()
-    if existing:
-        raise HTTPException(400, "User already exists — try logging in")
+    # Generate a random state for CSRF protection
+    state = secrets.token_hex(16)
+    pending_states[state] = True
 
-    user = User(email=req.email, name=req.name)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-
-    return {"detail": f"User created: {user.name} ({user.email})", "id": user.id}
-
-
-# ==================== LOGIN ====================
-
-@router.post("/login")
-def login(req: LoginRequest, db: DBSession = Depends(get_db)):
-    """
-    Login with email → create session → set cookie.
-
-    What happens:
-      1. Find user by email in DB
-      2. Generate random session token
-      3. Store token in 'sessions' table (linked to user_id)
-      4. Set token as HttpOnly cookie on the response
-
-    After this, the browser has the cookie. Every future request
-    automatically includes it. The server reads it in /auth/me
-    and knows who's asking.
-
-    No password check here — this is Phase 1 (teaching sessions).
-    In Phase 2, Google OAuth will replace this identity verification.
-    """
-    user = db.query(User).filter(User.email == req.email).first()
-    if not user:
-        raise HTTPException(404, "User not found — sign up first")
-
-    if not user.active:
-        raise HTTPException(403, "Account deactivated")
-
-    # Create session and set cookie
-    response = Response(
-        content=f'{{"detail":"Logged in as {user.name}","email":"{user.email}"}}',
-        media_type="application/json",
+    # Build the Google authorization URL
+    oauth = OAuth2Session(
+        client_id=GOOGLE_CLIENT_ID,
+        redirect_uri=REDIRECT_URI,
+        scope="openid email profile",
     )
+    url, _ = oauth.create_authorization_url(GOOGLE_AUTH_URL, state=state)
+
+    # Redirect the user's browser to Google
+    return RedirectResponse(url=url)
+
+
+@router.get("/callback")
+def google_callback(code: str, state: str, db: DBSession = Depends(get_db)):
+    """
+    Step 2 of Google login: Google redirects back here.
+
+    After the user logs in at Google, Google redirects to:
+      http://localhost:8000/auth/callback?code=abc123&state=xyz789
+
+    We then:
+      1. Verify the state matches (CSRF protection)
+      2. Exchange the code for tokens (server-to-server, secret stays on server)
+      3. Use the token to ask Google "who is this person?"
+      4. Find or create the user in our database
+      5. Create session + set cookie (SAME as Phase 1!)
+      6. Redirect to the frontend
+    """
+
+    # 1. CSRF check — does the state match what we sent?
+    if state not in pending_states:
+        raise HTTPException(400, "Invalid state parameter — possible CSRF attack")
+    del pending_states[state]  # one-time use
+
+    # 2. Exchange the authorization code for tokens
+    #    This is a SERVER-TO-SERVER call. The client_secret never touches the browser.
+    oauth = OAuth2Session(
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI,
+    )
+    oauth.fetch_token(GOOGLE_TOKEN_URL, code=code)
+
+    # 3. Ask Google: "Who is this person?"
+    user_info = oauth.get(GOOGLE_USERINFO_URL).json()
+    email = user_info["email"]
+    name = user_info.get("name", email)
+    picture = user_info.get("picture")
+
+    # 4. Find or create user in our DB (Just-In-Time provisioning)
+    #    First login? We create the user automatically.
+    #    Returning user? We update their name/picture in case it changed.
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        user = User(email=email, name=name, picture=picture)
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        user.name = name
+        user.picture = picture
+        db.commit()
+
+    # 5. Create session + set cookie
+    #    THIS IS THE SAME _create_session() FROM PHASE 1
+    #    Same token generation, same DB insert, same cookie flags
+    response = RedirectResponse(url=FRONTEND_URL, status_code=302)
     _create_session(user, response, db)
 
     return response
 
 
-# ==================== LOGOUT ====================
+# ==================== LOGOUT (UNCHANGED FROM PHASE 1) ====================
 
 @router.post("/logout")
 def logout(request: Request, db: DBSession = Depends(get_db)):
@@ -175,7 +210,7 @@ def logout(request: Request, db: DBSession = Depends(get_db)):
     return response
 
 
-# ==================== WHO AM I? ====================
+# ==================== WHO AM I? (UNCHANGED FROM PHASE 1) ====================
 
 @router.get("/me")
 def get_me(request: Request, db: DBSession = Depends(get_db)):

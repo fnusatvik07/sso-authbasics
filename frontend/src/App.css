@@ -883,93 +883,41 @@
   margin-bottom: 1.75rem;
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.login-input {
-  height: 48px;
-  padding: 0 16px;
+.login-google {
+  width: 100%;
+  height: 52px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--white);
   color: var(--ink);
-  font-family: var(--sans);
-  font-size: 0.92rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.login-input::placeholder {
-  color: var(--ink-faint);
-}
-
-.login-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
-}
-
-.login-error {
-  font-size: 0.82rem;
-  color: #dc2626;
-  text-align: left;
-  padding: 0 4px;
-}
-
-.login-submit {
-  height: 48px;
-  border-radius: 12px;
-  border: none;
-  background: var(--ink);
-  color: white;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   font-family: var(--sans);
   cursor: pointer;
-  transition: all 0.2s var(--ease);
-  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.25s var(--ease);
 }
 
-.login-submit:hover:not(:disabled) {
-  background: #333;
+.login-google:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
+}
+
+.login-google:active {
+  transform: translateY(0);
   box-shadow: var(--shadow-sm);
 }
 
-.login-submit:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.login-switch {
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  color: var(--ink-muted);
-}
-
-.login-switch button {
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-weight: 500;
-  cursor: pointer;
-  font-family: var(--sans);
-  font-size: 0.85rem;
-}
-
-.login-switch button:hover {
-  text-decoration: underline;
-}
-
 .login-note {
-  margin-top: 1.25rem;
+  margin-top: 1.75rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--border);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
-  font-family: var(--mono);
   line-height: 1.6;
 }
 
