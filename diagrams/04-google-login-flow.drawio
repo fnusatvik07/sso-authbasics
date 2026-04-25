@@ -1,154 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="drawio" version="26.0.0">
   <diagram name="Google Login Flow">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <!-- Title -->
-        <mxCell id="title" value="Google OAuth Login Flow (Authorization Code)" style="text;html=1;fontSize=22;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#333333;align=center;" vertex="1" parent="1">
-          <mxGeometry x="350" y="20" width="500" height="40" as="geometry" />
+        <!-- Swim lanes -->
+        <mxCell id="lane1" value="Browser" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="280" height="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="lane2" value="Your Server (FastAPI)" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="380" height="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="lane3" value="Google" style="swimlane;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="780" y="40" width="300" height="1100" as="geometry" />
         </mxCell>
 
-        <!-- Three columns -->
-        <mxCell id="col1_h" value="Browser" style="text;html=1;fontSize=14;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="80" width="200" height="35" as="geometry" />
+        <!-- STEP 1 -->
+        <mxCell id="st1" value="STEP 1" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="col2_h" value="Your Server (FastAPI)" style="text;html=1;fontSize=14;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="80" width="250" height="35" as="geometry" />
-        </mxCell>
-        <mxCell id="col3_h" value="Google" style="text;html=1;fontSize=14;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1000" y="80" width="200" height="35" as="geometry" />
+        <mxCell id="s1" value="User clicks&#xa;&quot;Login with Google&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="110" width="220" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Vertical lines -->
-        <mxCell id="vl1" value="" style="line;strokeWidth=1;strokeColor=#cccccc;dashed=1;direction=south;" vertex="1" parent="1">
-          <mxGeometry x="179" y="120" width="1" height="820" as="geometry" />
-        </mxCell>
-        <mxCell id="vl2" value="" style="line;strokeWidth=1;strokeColor=#cccccc;dashed=1;direction=south;" vertex="1" parent="1">
-          <mxGeometry x="624" y="120" width="1" height="820" as="geometry" />
-        </mxCell>
-        <mxCell id="vl3" value="" style="line;strokeWidth=1;strokeColor=#cccccc;dashed=1;direction=south;" vertex="1" parent="1">
-          <mxGeometry x="1099" y="120" width="1" height="820" as="geometry" />
-        </mxCell>
-
-        <!-- Step 1 -->
-        <mxCell id="s1_label" value="Step 1" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="80" y="140" width="60" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="s1" value="User clicks&#xa;&quot;Login with Google&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="80" y="165" width="200" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="e_s1" value="window.location = /auth/google/login" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;fontColor=#666666;" edge="1" parent="1" source="s1" target="s2">
+        <!-- Arrow 1 to 2 -->
+        <mxCell id="e12" value="GET /auth/google/login" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;fontColor=#888888;" edge="1" parent="1" source="s1" target="s2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Step 2 -->
-        <mxCell id="s2_label" value="Step 2" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="500" y="140" width="60" height="20" as="geometry" />
+        <!-- STEP 2 -->
+        <mxCell id="st2" value="STEP 2" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="375" y="80" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="s2" value="Generate state (CSRF)&#xa;Build Google auth URL&#xa;Redirect browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="500" y="160" width="250" height="55" as="geometry" />
-        </mxCell>
-        <mxCell id="s2_note" value="state = secrets.token_hex(16)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=10;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="500" y="225" width="250" height="25" as="geometry" />
+        <mxCell id="s2" value="Generate random state&#xa;(CSRF protection)&#xa;Build Google auth URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="100" width="300" height="60" as="geometry" />
         </mxCell>
 
-        <!-- Arrow to Google -->
-        <mxCell id="e_s2_g" value="302 Redirect" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=10;fontColor=#666666;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s2" target="s3">
+        <!-- Arrow 2 to 3 -->
+        <mxCell id="e23" value="302 Redirect to Google" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=10;fontColor=#888888;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s2" target="s3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Step 3 -->
-        <mxCell id="s3_label" value="Step 3" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d6b656;" vertex="1" parent="1">
-          <mxGeometry x="1000" y="140" width="60" height="20" as="geometry" />
+        <!-- STEP 3 -->
+        <mxCell id="st3" value="STEP 3" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="795" y="80" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="s3" value="Google login page&#xa;User enters password&#xa;(your app NEVER sees it)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="980" y="160" width="240" height="55" as="geometry" />
-        </mxCell>
-        <mxCell id="s3_url" value="accounts.google.com/o/oauth2/v2/auth&#xa;?client_id=YOUR_ID&#xa;&amp;scope=openid email profile&#xa;&amp;state=random_csrf_token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="980" y="225" width="240" height="60" as="geometry" />
+        <mxCell id="s3" value="Google shows login page&#xa;User enters their password&#xa;(your app NEVER sees it)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="100" width="240" height="65" as="geometry" />
         </mxCell>
 
-        <!-- Step 4: Google redirects back -->
-        <mxCell id="s4_label" value="Step 4" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d6b656;" vertex="1" parent="1">
-          <mxGeometry x="1000" y="320" width="60" height="20" as="geometry" />
+        <!-- STEP 4: Google sends code back -->
+        <mxCell id="st4" value="STEP 4" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="795" y="210" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="s4" value="Google redirects back&#xa;with authorization code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="980" y="345" width="240" height="45" as="geometry" />
+        <mxCell id="s4" value="Google redirects browser back&#xa;with an authorization CODE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="235" width="240" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="s4_url" value="localhost:8000/auth/callback&#xa;?code=ABCDEF123&amp;state=random_csrf" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="980" y="400" width="240" height="35" as="geometry" />
-        </mxCell>
-
-        <mxCell id="e_s3_s4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="s3" target="s4">
+        <mxCell id="e34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="s3" target="s4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Arrow back to server -->
-        <mxCell id="e_s4_s5" value="302 Redirect to /auth/callback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;fontColor=#666666;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s4" target="s5">
+        <!-- The code arrives at server -->
+        <mxCell id="s4b" value="/auth/callback receives:&#xa;?code=ABCDEF&amp;state=xyz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="240" width="300" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="e4b" value="302 → /auth/callback?code=..." style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;fontColor=#888888;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s4" target="s4b">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Step 5: Exchange code -->
-        <mxCell id="s5_label" value="Step 5" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="500" y="325" width="60" height="20" as="geometry" />
+        <!-- STEP 5: Verify state -->
+        <mxCell id="st5" value="STEP 5" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="375" y="325" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="s5" value="Verify state (CSRF check)&#xa;Exchange code for tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="345" width="250" height="45" as="geometry" />
+        <mxCell id="s5" value="Verify state matches&#xa;(CSRF check passes)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="350" width="300" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="s5_note" value="SERVER-TO-SERVER call&#xa;client_secret used here&#xa;(never touches the browser)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="500" y="400" width="250" height="45" as="geometry" />
-        </mxCell>
-
-        <!-- Step 6: Get user info -->
-        <mxCell id="s6_label" value="Step 6" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="500" y="475" width="60" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="s6" value="Call Google userinfo API&#xa;Get email, name, picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="500" y="500" width="250" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="s6_data" value='{"email":"priya@gmail.com",&#xa; "name":"Priya Sharma",&#xa; "picture":"https://..."}' style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="500" y="555" width="250" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="e_s5_s6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s5" target="s6">
+        <mxCell id="e45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s4b" target="s5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Step 7: Create session (SAME AS PHASE 1) -->
-        <mxCell id="s7_label" value="Step 7" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#9673a6;" vertex="1" parent="1">
-          <mxGeometry x="500" y="625" width="60" height="20" as="geometry" />
+        <!-- STEP 6: Exchange code for tokens (THE KEY STEP) -->
+        <mxCell id="st6" value="STEP 6" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="375" y="430" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="s7" value="Find or create user in DB&#xa;Call _create_session()&#xa;SAME AS PHASE 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="650" width="250" height="55" as="geometry" />
+        <mxCell id="s6" value="Exchange CODE for tokens&#xa;Send: code + client_secret&#xa;(SERVER-TO-SERVER call)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="455" width="300" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="s7_note" value="token = secrets.token_hex(32)&#xa;INSERT INTO sessions (token, user_id)&#xa;Set-Cookie: session_token=...;HttpOnly" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=6;" vertex="1" parent="1">
-          <mxGeometry x="500" y="715" width="250" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="e_s6_s7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="s6" target="s7">
+        <mxCell id="e56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s5" target="s6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Step 8: Redirect to frontend -->
-        <mxCell id="s8" value="Redirect to frontend&#xa;Cookie is now set" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="500" y="790" width="250" height="45" as="geometry" />
+        <!-- Arrow: Server sends code+secret to Google -->
+        <mxCell id="s6g" value="Google validates and&#xa;returns access_token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="810" y="460" width="240" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="e_s7_s8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s7" target="s8">
+        <mxCell id="e6_send" value="POST code + client_secret" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;fontSize=10;fontColor=#888888;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="s6g">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6_recv" value="Returns access_token" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;fontSize=10;fontColor=#888888;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6g" target="s6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Back to browser -->
-        <mxCell id="s9" value="Frontend loads&#xa;Calls /auth/me&#xa;Shows chat with real&#xa;name + profile picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="790" width="200" height="65" as="geometry" />
+        <!-- Note: secret stays on server -->
+        <mxCell id="s6_note" value="client_secret never touches&#xa;the browser. Only used here." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="525" width="300" height="35" as="geometry" />
         </mxCell>
-        <mxCell id="e_s8_s9" value="302 → localhost:5173" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;fontColor=#666666;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s8" target="s9">
+
+        <!-- STEP 7: Get user info -->
+        <mxCell id="st7" value="STEP 7" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="375" y="595" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Call Google userinfo API&#xa;Get verified email, name, picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="620" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="e67" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s6" target="s7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="580" />
+              <mxPoint x="390" y="645" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Google returns user info -->
+        <mxCell id="s7g" value='Returns:&#xa;email: "priya@gmail.com"&#xa;name: "Priya Sharma"' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="810" y="615" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e7g" value="GET /userinfo (with token)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;fontColor=#888888;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="s7" target="s7g">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7r" value="Returns user info" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;fontSize=10;fontColor=#888888;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="s7g" target="s7">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Highlight box -->
-        <mxCell id="highlight" value="From this point on, everything is&#xa;IDENTICAL to Phase 1:&#xa;cookie on every request, session lookup,&#xa;gatekeeper, logout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=2;align=center;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="880" width="670" height="50" as="geometry" />
+        <!-- STEP 8: Create session (SAME AS PHASE 1) -->
+        <mxCell id="st8" value="STEP 8" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="375" y="720" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Find or create user in DB&#xa;Call _create_session()&#xa;SAME AS PHASE 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="745" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e78" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="s7" target="s8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s8_detail" value="token = secrets.token_hex(32)&#xa;INSERT INTO sessions&#xa;Set-Cookie: session_token=...; HttpOnly" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=10;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="400" y="815" width="300" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 9: Redirect to frontend -->
+        <mxCell id="s9" value="Redirect to frontend&#xa;with cookie set" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="900" width="300" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="e89" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="s8" target="s9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="880" />
+              <mxPoint x="390" y="923" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Browser gets the result -->
+        <mxCell id="s10" value="Frontend loads with cookie&#xa;Calls /auth/me&#xa;Shows real name + picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="895" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e910" value="302 → localhost:5173" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;fontColor=#888888;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s9" target="s10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom note -->
+        <mxCell id="bottom" value="From here on: IDENTICAL to Phase 1. Cookie on every request, session lookup, gatekeeper, logout." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=2;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1000" width="980" height="40" as="geometry" />
         </mxCell>
 
       </root>

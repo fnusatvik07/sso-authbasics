@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="drawio" version="26.0.0">
   <diagram name="OAuth2 vs OIDC">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1050" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -10,185 +10,173 @@
         <mxCell id="title" value="OAuth 2.0 vs OIDC (OpenID Connect)" style="text;html=1;fontSize=24;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#333333;align=center;" vertex="1" parent="1">
           <mxGeometry x="300" y="20" width="500" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Same flow, different scope, different result" style="text;html=1;fontSize=13;fontStyle=2;fillColor=none;strokeColor=none;fontColor=#888888;align=center;" vertex="1" parent="1">
-          <mxGeometry x="350" y="55" width="400" height="25" as="geometry" />
+
+        <!-- ===== LEFT PANEL: OAuth 2.0 ===== -->
+        <mxCell id="oauth_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=25;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="480" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="oauth_h" value="OAuth 2.0 = AUTHORIZATION" style="text;html=1;fontSize=17;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d79b00;align=center;" vertex="1" parent="1">
+          <mxGeometry x="100" y="90" width="360" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="oauth_q" value="&quot;Can this app access my Google Calendar?&quot;" style="text;html=1;fontSize=12;fontStyle=2;fillColor=none;strokeColor=none;fontColor=#888888;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="118" width="400" height="22" as="geometry" />
         </mxCell>
 
-        <!-- ===== LEFT: OAuth 2.0 ===== -->
-        <mxCell id="oauth_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=30;" vertex="1" parent="1">
-          <mxGeometry x="40" y="100" width="530" height="520" as="geometry" />
+        <mxCell id="o1" value="1. App requests access&#xa;scope: calendar.readonly" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="160" width="240" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="oauth_title" value="OAuth 2.0 = AUTHORIZATION" style="text;html=1;fontSize=18;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#d79b00;align=center;" vertex="1" parent="1">
-          <mxGeometry x="120" y="110" width="370" height="30" as="geometry" />
+        <mxCell id="o2" value="2. User consents at Google&#xa;&quot;Allow calendar access?&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="225" width="240" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="oauth_q" value="&quot;Can this app access my Google Calendar?&quot;" style="text;html=1;fontSize=13;fontStyle=2;fillColor=none;strokeColor=none;fontColor=#666666;align=center;" vertex="1" parent="1">
-          <mxGeometry x="100" y="140" width="400" height="25" as="geometry" />
+        <mxCell id="o3" value="3. Google returns&#xa;ACCESS TOKEN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="290" width="240" height="45" as="geometry" />
         </mxCell>
-
-        <mxCell id="o1" value="1. App requests access&#xa;scope: calendar.readonly" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="80" y="185" width="220" height="40" as="geometry" />
+        <mxCell id="o4" value="4. App calls Calendar API&#xa;using the access token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="355" width="240" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="o2" value='2. User consents:&#xa;"Yes, allow calendar access"' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="80" y="245" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="o3" value="3. Google returns&#xa;ACCESS TOKEN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="305" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="o4" value="4. App calls Calendar API&#xa;with access token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="80" y="365" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="o5" value='5. Result:&#xa;"I can read your calendar"' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="425" width="220" height="45" as="geometry" />
+        <mxCell id="o5" value="Result: &quot;I can read your calendar&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="425" width="240" height="40" as="geometry" />
         </mxCell>
 
-        <mxCell id="oe1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1;" edge="1" parent="1" source="o1" target="o2"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="oe2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1;" edge="1" parent="1" source="o2" target="o3"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="oe3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1;" edge="1" parent="1" source="o3" target="o4"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="oe4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1;" edge="1" parent="1" source="o4" target="o5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="oe1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="o1" target="o2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="oe2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="o2" target="o3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="oe3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="o3" target="o4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="oe4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="o4" target="o5"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- OAuth token box -->
-        <mxCell id="o_token" value="Access Token&#xa;Grants API access&#xa;Lifetime: ~1 hour&#xa;Use: Call Calendar API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="340" y="270" width="200" height="70" as="geometry" />
-        </mxCell>
-
-        <!-- OAuth does NOT -->
-        <mxCell id="o_not" value="OAuth does NOT tell you&#xa;WHO the user is.&#xa;Only what they ALLOWED." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="340" y="380" width="200" height="55" as="geometry" />
+        <!-- OAuth warning -->
+        <mxCell id="o_warn" value="OAuth does NOT tell you&#xa;WHO the user is.&#xa;Only what they allowed." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="100" y="490" width="240" height="50" as="geometry" />
         </mxCell>
 
-        <!-- ===== RIGHT: OIDC ===== -->
-        <mxCell id="oidc_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=30;" vertex="1" parent="1">
-          <mxGeometry x="620" y="100" width="530" height="520" as="geometry" />
-        </mxCell>
-        <mxCell id="oidc_title" value="OIDC = AUTHENTICATION" style="text;html=1;fontSize=18;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#6c8ebf;align=center;" vertex="1" parent="1">
-          <mxGeometry x="720" y="110" width="340" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="oidc_q" value="&quot;Prove to this app that I am priya@gmail.com&quot;" style="text;html=1;fontSize=13;fontStyle=2;fillColor=none;strokeColor=none;fontColor=#666666;align=center;" vertex="1" parent="1">
-          <mxGeometry x="680" y="140" width="420" height="25" as="geometry" />
+        <!-- Token detail -->
+        <mxCell id="o_token" value="Access Token&#xa;Grants API access&#xa;Lifetime: ~1 hour&#xa;Use: call external APIs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="280" width="130" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="i1" value="1. App requests identity&#xa;scope: openid email profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="660" y="185" width="220" height="40" as="geometry" />
+        <!-- ===== RIGHT PANEL: OIDC ===== -->
+        <mxCell id="oidc_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=25;" vertex="1" parent="1">
+          <mxGeometry x="570" y="80" width="480" height="490" as="geometry" />
         </mxCell>
-        <mxCell id="i2" value="2. User logs in at Google&#xa;(password goes to Google only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="660" y="245" width="220" height="40" as="geometry" />
+        <mxCell id="oidc_h" value="OIDC = AUTHENTICATION" style="text;html=1;fontSize=17;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="640" y="90" width="340" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="i3" value="3. Google returns&#xa;ID TOKEN (JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="660" y="305" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="i4" value="4. App reads ID token&#xa;email, name, picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="660" y="365" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="i5" value='5. Result:&#xa;"I know who you are"' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="660" y="425" width="220" height="45" as="geometry" />
+        <mxCell id="oidc_q" value="&quot;Prove to this app that I am priya@gmail.com&quot;" style="text;html=1;fontSize=12;fontStyle=2;fillColor=none;strokeColor=none;fontColor=#888888;align=center;" vertex="1" parent="1">
+          <mxGeometry x="610" y="118" width="400" height="22" as="geometry" />
         </mxCell>
 
-        <mxCell id="ie1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1;" edge="1" parent="1" source="i1" target="i2"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="ie2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1;" edge="1" parent="1" source="i2" target="i3"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="ie3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1;" edge="1" parent="1" source="i3" target="i4"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="ie4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1;" edge="1" parent="1" source="i4" target="i5"><mxGeometry relative="1" as="geometry" /></mxCell>
-
-        <!-- ID Token box -->
-        <mxCell id="i_token" value='ID Token (JWT)&#xa;{"email":"priya@gmail.com",&#xa; "name":"Priya Sharma",&#xa; "iss":"accounts.google.com",&#xa; "exp":1714000000}' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="920" y="255" width="210" height="80" as="geometry" />
+        <mxCell id="i1" value="1. App requests identity&#xa;scope: openid email profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="650" y="160" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="i2" value="2. User logs in at Google&#xa;(password stays with Google)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="650" y="225" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="i3" value="3. Google returns&#xa;ID TOKEN (JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="290" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="i4" value="4. App reads the ID token&#xa;Gets: email, name, picture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="650" y="355" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="i5" value="Result: &quot;I know who you are&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="425" width="240" height="40" as="geometry" />
         </mxCell>
 
-        <!-- OIDC built on top -->
-        <mxCell id="i_note" value="OIDC is built ON TOP&#xa;of OAuth 2.0.&#xa;Same flow + identity layer." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="920" y="380" width="210" height="55" as="geometry" />
+        <mxCell id="ie1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="i1" target="i2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ie2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="i2" target="i3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ie3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="i3" target="i4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ie4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="i4" target="i5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- OIDC note -->
+        <mxCell id="i_note" value="OIDC is built ON TOP of OAuth 2.0.&#xa;Same flow + identity layer.&#xa;The &quot;openid&quot; scope is the switch." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="650" y="490" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Token detail -->
+        <mxCell id="i_token" value='ID Token (JWT)&#xa;{"email":"priya@gmail.com",&#xa; "name":"Priya Sharma",&#xa; "iss":"accounts.google.com"}' style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="910" y="280" width="130" height="70" as="geometry" />
         </mxCell>
 
         <!-- ===== CENTER: SAME FLOW ===== -->
-        <mxCell id="same" value="SAME&#xa;FLOW" style="text;html=1;fontSize=16;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#b85450;align=center;" vertex="1" parent="1">
-          <mxGeometry x="560" y="290" width="80" height="45" as="geometry" />
+        <mxCell id="center_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=20;" vertex="1" parent="1">
+          <mxGeometry x="525" y="250" width="40" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="same_arrow1" value="" style="shape=flexArrow;endArrow=classic;html=1;fillColor=#f8cecc;strokeColor=#b85450;width=8;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="560" y="310" as="sourcePoint" />
-            <mxPoint x="540" y="310" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="same_arrow2" value="" style="shape=flexArrow;endArrow=classic;html=1;fillColor=#f8cecc;strokeColor=#b85450;width=8;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="640" y="310" as="sourcePoint" />
-            <mxPoint x="660" y="310" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="same_text" value="S&#xa;A&#xa;M&#xa;E&#xa;&#xa;F&#xa;L&#xa;O&#xa;W" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#b85450;align=center;" vertex="1" parent="1">
+          <mxGeometry x="527" y="245" width="35" height="140" as="geometry" />
         </mxCell>
 
         <!-- ===== BOTTOM: Comparison Table ===== -->
-        <mxCell id="table_title" value="Comparison" style="text;html=1;fontSize=16;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#333333;align=center;" vertex="1" parent="1">
-          <mxGeometry x="400" y="650" width="200" height="30" as="geometry" />
+        <mxCell id="table_title" value="Side-by-Side Comparison" style="text;html=1;fontSize=16;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#333333;align=center;" vertex="1" parent="1">
+          <mxGeometry x="370" y="600" width="300" height="30" as="geometry" />
         </mxCell>
 
-        <!-- Table header -->
-        <mxCell id="th1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="690" width="160" height="35" as="geometry" />
+        <!-- Header row -->
+        <mxCell id="th0" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="180" y="640" width="150" height="35" as="geometry" />
         </mxCell>
-        <mxCell id="th2" value="OAuth 2.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="300" y="690" width="280" height="35" as="geometry" />
+        <mxCell id="th1" value="OAuth 2.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="640" width="280" height="35" as="geometry" />
         </mxCell>
-        <mxCell id="th3" value="OIDC" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="580" y="690" width="280" height="35" as="geometry" />
+        <mxCell id="th2" value="OIDC" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="640" width="280" height="35" as="geometry" />
         </mxCell>
 
-        <!-- Row 1 -->
+        <!-- Row: Question -->
         <mxCell id="r1a" value="Question" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="725" width="160" height="35" as="geometry" />
+          <mxGeometry x="180" y="675" width="150" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r1b" value="What can this app do?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="300" y="725" width="280" height="35" as="geometry" />
+          <mxGeometry x="330" y="675" width="280" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r1c" value="Who is this person?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="580" y="725" width="280" height="35" as="geometry" />
+          <mxGeometry x="610" y="675" width="280" height="35" as="geometry" />
         </mxCell>
 
-        <!-- Row 2 -->
+        <!-- Row: Scope -->
         <mxCell id="r2a" value="Scope" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="760" width="160" height="35" as="geometry" />
+          <mxGeometry x="180" y="710" width="150" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r2b" value="calendar.readonly" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="300" y="760" width="280" height="35" as="geometry" />
+          <mxGeometry x="330" y="710" width="280" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r2c" value="openid email profile" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="580" y="760" width="280" height="35" as="geometry" />
+          <mxGeometry x="610" y="710" width="280" height="35" as="geometry" />
         </mxCell>
 
-        <!-- Row 3 -->
-        <mxCell id="r3a" value="Token you use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="795" width="160" height="35" as="geometry" />
+        <!-- Row: Token -->
+        <mxCell id="r3a" value="Token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="745" width="150" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r3b" value="Access Token (call APIs)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="300" y="795" width="280" height="35" as="geometry" />
+          <mxGeometry x="330" y="745" width="280" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r3c" value="ID Token (read identity)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="580" y="795" width="280" height="35" as="geometry" />
+          <mxGeometry x="610" y="745" width="280" height="35" as="geometry" />
         </mxCell>
 
-        <!-- Row 4 -->
+        <!-- Row: Result -->
         <mxCell id="r4a" value="Result" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="830" width="160" height="35" as="geometry" />
+          <mxGeometry x="180" y="780" width="150" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r4b" value="I can read your calendar" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="300" y="830" width="280" height="35" as="geometry" />
+          <mxGeometry x="330" y="780" width="280" height="35" as="geometry" />
         </mxCell>
         <mxCell id="r4c" value="I know who you are" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="580" y="830" width="280" height="35" as="geometry" />
+          <mxGeometry x="610" y="780" width="280" height="35" as="geometry" />
         </mxCell>
 
-        <!-- Row 5 -->
-        <mxCell id="r5a" value="Our app uses" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="140" y="865" width="160" height="35" as="geometry" />
+        <!-- Row: Our app -->
+        <mxCell id="r5a" value="AgentFlow uses" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="815" width="150" height="35" as="geometry" />
         </mxCell>
-        <mxCell id="r5b" value="(not used in this project)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;fontStyle=2;fontColor=#999999;" vertex="1" parent="1">
-          <mxGeometry x="300" y="865" width="280" height="35" as="geometry" />
+        <mxCell id="r5b" value="(not used in this project)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#cccccc;fontSize=11;fontStyle=2;fontColor=#aaaaaa;" vertex="1" parent="1">
+          <mxGeometry x="330" y="815" width="280" height="35" as="geometry" />
         </mxCell>
-        <mxCell id="r5c" value="YES (Google login)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="580" y="865" width="280" height="35" as="geometry" />
+        <mxCell id="r5c" value="YES (Google Login)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="815" width="280" height="35" as="geometry" />
         </mxCell>
 
         <!-- Key insight -->
         <mxCell id="insight" value="Key insight: Same redirect + consent + code exchange flow. The SCOPE decides whether you get authorization (API access) or authentication (identity)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="200" y="930" width="600" height="40" as="geometry" />
+          <mxGeometry x="200" y="880" width="650" height="40" as="geometry" />
         </mxCell>
 
       </root>
