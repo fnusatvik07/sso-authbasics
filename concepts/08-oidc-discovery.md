@@ -88,6 +88,45 @@ If you guessed `accounts.google.com/token`, it wouldn't work. Discovery eliminat
 
 The admin only configured ONE value: `issuer_url`. Everything else was discovered automatically.
 
+### Error handling
+
+What if the discovery URL is unreachable or returns garbage?
+
+```python
+def fetch_oidc_config(issuer_url: str) -> dict:
+    discovery_url = issuer_url.rstrip("/") + "/.well-known/openid-configuration"
+    response = requests.get(discovery_url, timeout=10)
+    response.raise_for_status()   # raises exception if 404, 500, etc.
+
+    config = response.json()
+
+    # Verify required fields are present
+    required = ["authorization_endpoint", "token_endpoint"]
+    for field in required:
+        if field not in config:
+            raise ValueError(f"OIDC discovery missing required field: {field}")
+
+    return config
+```
+
+Common failures:
+- Wrong issuer_url → 404
+- Corporate firewall blocking outbound requests → timeout
+- IdP is down → 500
+- Non-OIDC provider (GitHub is NOT OIDC) → missing fields
+
+### Try it yourself
+
+Open these URLs in a browser to see real discovery documents:
+
+```
+Google:    https://accounts.google.com/.well-known/openid-configuration
+Microsoft: https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
+Okta:      https://dev-12345.okta.com/.well-known/openid-configuration
+```
+
+Compare the endpoints — they're all different. Discovery is the only reliable way to get them.
+
 ### What about SAML?
 
 SAML doesn't have a `.well-known` endpoint. Instead, IdPs publish a **metadata XML** file:
@@ -97,3 +136,7 @@ https://acme.okta.com/app/abc123/sso/saml/metadata
 ```
 
 This XML contains similar info — the SSO URL, the certificate for signature verification, the entity ID. Same concept, different format.
+
+### What about GitHub?
+
+GitHub is OAuth2 only — it does NOT support OIDC. There is no `/.well-known/openid-configuration` for GitHub. That's why in our multi-provider code, GitHub's URLs are hardcoded. OIDC discovery only works with OIDC-compliant providers.

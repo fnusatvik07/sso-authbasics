@@ -137,6 +137,84 @@ if not sso_conn.enabled:
 
 Useful when something breaks and you need to quickly turn off SSO while keeping the config intact.
 
+## The full callback flow
+
+When the IdP redirects back, the callback needs to figure out which org's credentials to use:
+
+```python
+@router.get("/sso/callback")
+def sso_callback(code: str, state: str, db = Depends(get_db)):
+    # 1. State tells us which SSO config started this login
+    sso_conn_id = pending_sso_states.pop(state)
+
+    # 2. Load that org's SSO config from DB
+    sso_conn = db.query(SSOConnection).filter(SSOConnection.id == sso_conn_id).first()
+
+    # 3. Fetch discovery to get the REAL token endpoint
+    oidc_config = fetch_oidc_config(sso_conn.issuer_url)
+    token_url = oidc_config["token_endpoint"]
+    userinfo_url = oidc_config["userinfo_endpoint"]
+
+    # 4. Exchange code using THIS ORG'S credentials
+    oauth = OAuth2Session(
+        client_id=sso_conn.client_id,         # from DB, not .env
+        client_secret=sso_conn.client_secret, # from DB, not .env
+    )
+    oauth.fetch_token(token_url, code=code)
+
+    # 5. Get user info
+    user_info = oauth.get(userinfo_url).json()
+
+    # 6. Find or create user, assign to org
+    user = find_or_create_user(user_info["email"], sso_conn.org_id, db)
+
+    # 7. Same session creation as always
+    response = RedirectResponse(url="/dashboard")
+    _create_session(user, response, db)
+    return response
+```
+
+The state parameter is doing double duty here — CSRF protection AND routing. Without it, the callback wouldn't know which org's client_secret to use.
+
+## OIDC vs SAML branching
+
+The login endpoint checks the provider type and branches:
+
+```python
+if sso_conn.provider == "oidc":
+    # Redirect flow: user → IdP → callback with code → exchange → userinfo
+    return start_oidc_login(sso_conn)
+
+elif sso_conn.provider == "saml":
+    # POST flow: user → IdP → IdP POSTs signed XML to ACS URL
+    return start_saml_login(sso_conn)
+```
+
+Different protocols, same destination: `_create_session()`.
+
+## Security: never expose secrets in API responses
+
+```python
+# WRONG — leaks the secret
+@router.get("/sso/config")
+def get_config():
+    return sso_conn   # includes client_secret!
+
+# CORRECT — explicitly exclude sensitive fields
+@router.get("/sso/config")
+def get_config():
+    return {
+        "provider": sso_conn.provider,
+        "issuer_url": sso_conn.issuer_url,
+        "client_id": sso_conn.client_id,
+        "enabled": sso_conn.enabled,
+        # client_secret: intentionally NOT returned
+        # certificate: intentionally NOT returned
+    }
+```
+
+Same principle for SCIM tokens — show once during generation, never return again.
+
 ## The teaching point
 
 ```

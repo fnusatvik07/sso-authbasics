@@ -123,3 +123,67 @@ if not user:
 ```
 
 No admin needs to manually add users. They just appear when they first log in through the company's IdP.
+
+## Public domain blocklist
+
+What stops someone from creating an org with domain `gmail.com` and hijacking all Gmail users?
+
+You blocklist public email domains:
+
+```python
+BLOCKED_DOMAINS = {"gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "icloud.com"}
+
+if domain in BLOCKED_DOMAINS:
+    raise HTTPException(400, "Public email domains cannot be used as org domains")
+```
+
+Only corporate domains (acme.com, techcorp.io) can be registered as orgs. Personal accounts use regular Google/Microsoft login instead of tenant SSO.
+
+## The SSO login endpoint
+
+In the SSO project, the tenant-aware login is a single endpoint that routes by email:
+
+```python
+@router.get("/sso/login")
+def sso_login(email: str, db = Depends(get_db)):
+    # 1. Extract domain
+    domain = email.split("@")[1].lower()
+
+    # 2. Find org
+    org = db.query(Org).filter(Org.domain == domain).first()
+    if not org:
+        raise "No org found — use personal Google login instead"
+
+    # 3. Find SSO config for this org
+    sso_conn = db.query(SSOConnection).filter(
+        SSOConnection.org_id == org.id,
+        SSOConnection.enabled == True
+    ).first()
+    if not sso_conn:
+        raise "No SSO configured — ask your IT admin"
+
+    # 4. Route based on protocol
+    if sso_conn.provider == "oidc":
+        return start_oidc_login(sso_conn)    # redirect to Okta/Azure/etc.
+    elif sso_conn.provider == "saml":
+        return start_saml_login(sso_conn)    # redirect to SAML IdP
+```
+
+The user just enters their email. The app figures out everything else — which org, which IdP, which protocol, which endpoints. This is what makes enterprise SSO seamless.
+
+## The two login paths
+
+```
+Personal user (priya@gmail.com):
+  → "Login with Google" button
+  → Hardcoded Google OAuth
+  → No org assignment
+
+Enterprise user (priya@acme.com):
+  → Enters email in SSO login
+  → App looks up acme.com → Acme org → Okta OIDC config
+  → Redirects to Okta
+  → User auto-assigned to Acme org
+```
+
+Both paths end at the same `_create_session()`. The difference is how the user gets there.
