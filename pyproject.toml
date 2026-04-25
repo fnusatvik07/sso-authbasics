@@ -1,0 +1,20 @@
+[project]
+name = "agent-flow"
+version = "0.1.0"
+description = "Agentic RAG chatbot with auth"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel",
+    "sqlalchemy",
+    "python-dotenv",
+    "fastapi",
+    "uvicorn",
+    "authlib",
+    "langchain",
+    "langchain-openai",
+    "langchain-community",
+    "langgraph",
+    "faiss-cpu",
+    "pydantic",
+]
