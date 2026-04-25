@@ -1,7 +1,7 @@
 """
-FastAPI wrapper for the Agentic RAG chatbot.
+FastAPI wrapper for the Agentic RAG chatbot + Google Auth.
 
-Run:  uvicorn app:app --reload
+Run:  python -m uvicorn app:app --reload
 Test: curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{"question": "What is RAG?"}'
 """
 
@@ -9,15 +9,24 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from agentic_rag import ask
+from auth.routes import router as auth_router
+from database import engine, Base
 
-app = FastAPI(title="Agentic RAG Chatbot")
+# Create all tables on startup (User, SessionRecord)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="AgentFlow")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,          # IMPORTANT: allows cookies cross-origin
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Wire in auth routes: /auth/google/login, /auth/callback, /auth/logout, /auth/me
+app.include_router(auth_router)
 
 
 class ChatRequest(BaseModel):
