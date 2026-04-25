@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import "./App.css";
 
-const API = "http://localhost:8000/chat";
+const BASE = "http://localhost:8000";
 
 const SUGGESTIONS = [
   "What is RAG?",
@@ -30,6 +30,10 @@ const SendIcon = () => (
   </svg>
 );
 
+/** Helper: fetch with cookies */
+const api = (path, opts = {}) =>
+  fetch(`${BASE}${path}`, { credentials: "include", ...opts });
+
 
 /* ═══════════════════════════════════════════════════
    LANDING PAGE
@@ -49,7 +53,6 @@ function Landing({ onChat }) {
 
   return (
     <>
-      {/* Nav */}
       <nav className={`nav ${scrolled ? "nav--glass" : ""}`}>
         <div className="nav__brand">
           <span className="nav__mark"><Bolt stroke="white" strokeWidth="2" /></span>
@@ -58,13 +61,10 @@ function Landing({ onChat }) {
         <div className="nav__right">
           <button className="nav__link" onClick={() => scrollTo("features")}>Features</button>
           <button className="nav__link" onClick={() => scrollTo("how")}>How it works</button>
-          <button className="nav__btn nav__btn--dark" onClick={onChat}>
-            Open Chat
-          </button>
+          <button className="nav__btn nav__btn--dark" onClick={onChat}>Open Chat</button>
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="hero">
         <motion.div
           className="hero__inner"
@@ -72,8 +72,7 @@ function Landing({ onChat }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.span
-            className="hero__pill"
+          <motion.span className="hero__pill"
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.4 }}
@@ -82,9 +81,7 @@ function Landing({ onChat }) {
             Powered by LangChain &amp; LangGraph
           </motion.span>
 
-          <h1 className="hero__h1">
-            Research smarter<br />with <em>AgentFlow</em>
-          </h1>
+          <h1 className="hero__h1">Research smarter<br />with <em>AgentFlow</em></h1>
 
           <p className="hero__p">
             An AI assistant that autonomously retrieves knowledge,
@@ -92,53 +89,29 @@ function Landing({ onChat }) {
           </p>
 
           <div className="hero__actions">
-            <button className="hero__primary" onClick={onChat}>
-              Start chatting <Arrow />
-            </button>
-            <button className="hero__secondary" onClick={() => scrollTo("how")}>
-              See how it works
-            </button>
+            <button className="hero__primary" onClick={onChat}>Start chatting <Arrow /></button>
+            <button className="hero__secondary" onClick={() => scrollTo("how")}>See how it works</button>
           </div>
 
-          <motion.div
-            className="hero__proof"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          >
+          <motion.div className="hero__proof" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }}>
             <span className="hero__proof-label">Built with</span>
             <div className="hero__proof-logos">
-              <span>LangChain</span>
-              <span>LangGraph</span>
-              <span>FastAPI</span>
-              <span>FAISS</span>
-              <span>OpenAI</span>
+              <span>LangChain</span><span>LangGraph</span><span>FastAPI</span><span>FAISS</span><span>OpenAI</span>
             </div>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Features */}
       <section className="features" id="features">
         <div className="section-eyebrow">Built-in tools</div>
         <h2 className="section-title">Three tools. One intelligent agent.</h2>
         <div className="features__grid">
           {[
-            { icon: "\u{1F50D}", c: "blue",  name: "Knowledge Base",
-              desc: "Searches a FAISS vector store of documents using semantic similarity. Finds the most relevant context instantly." },
-            { icon: "\u{1F310}", c: "pink",  name: "Web Search",
-              desc: "When local knowledge isn\u2019t enough, the agent searches the web via Tavily for real-time information." },
-            { icon: "\u{1F9EE}", c: "amber", name: "Calculator",
-              desc: "Handles mathematical expressions on the fly. The agent recognizes math questions and routes them automatically." },
+            { icon: "\u{1F50D}", c: "blue", name: "Knowledge Base", desc: "Searches a FAISS vector store using semantic similarity. Finds the most relevant context instantly." },
+            { icon: "\u{1F310}", c: "pink", name: "Web Search", desc: "When local knowledge isn\u2019t enough, the agent searches the web via Tavily for real-time info." },
+            { icon: "\u{1F9EE}", c: "amber", name: "Calculator", desc: "Handles math on the fly. The agent recognizes math questions and routes them automatically." },
           ].map((f, i) => (
-            <motion.div
-              key={f.name}
-              className="fcard"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <motion.div key={f.name} className="fcard" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
               <div className={`fcard__icon fcard__icon--${f.c}`}>{f.icon}</div>
               <div className="fcard__name">{f.name}</div>
               <div className="fcard__desc">{f.desc}</div>
@@ -147,23 +120,16 @@ function Landing({ onChat }) {
         </div>
       </section>
 
-      {/* How it works */}
       <section className="steps-section" id="how">
         <h2 className="section-title">How it works</h2>
         <div className="steps">
           {[
-            { name: "You ask a question", desc: "Type anything \u2014 a factual question, math problem, or current events query." },
-            { name: "The agent reasons", desc: "The LLM analyzes your question and decides which tool to call: knowledge base, web search, or calculator." },
-            { name: "Tools execute", desc: "The selected tool runs autonomously \u2014 retrieving docs, searching the web, or computing results." },
+            { name: "You ask a question", desc: "Type anything \u2014 a factual question, math, or current events." },
+            { name: "The agent reasons", desc: "The LLM decides which tool to call: knowledge base, web search, or calculator." },
+            { name: "Tools execute", desc: "The selected tool runs autonomously \u2014 retrieving docs, searching, or computing." },
             { name: "You get an answer", desc: "The agent synthesizes the output into a clear, grounded response." },
           ].map((s, i) => (
-            <motion.div
-              key={i} className="step"
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <motion.div key={i} className="step" initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
               <div className="step__num">0{i + 1}</div>
               <div className="step__text">
                 <div className="step__name">{s.name}</div>
@@ -174,22 +140,14 @@ function Landing({ onChat }) {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="cta">
-        <motion.div
-          className="cta__box"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div className="cta__box" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
           <h2 className="cta__title">Ready to try AgentFlow?</h2>
-          <p className="cta__desc">No signup. Just open the chat and start asking.</p>
+          <p className="cta__desc">Sign up and start asking questions in seconds.</p>
           <button className="cta__btn" onClick={onChat}>Launch Chat <Arrow /></button>
         </motion.div>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <span>AgentFlow &mdash; Built with LangChain, LangGraph &amp; FastAPI</span>
         <span>Agentic RAG</span>
@@ -200,21 +158,145 @@ function Landing({ onChat }) {
 
 
 /* ═══════════════════════════════════════════════════
-   CHAT PAGE  —  ChatGPT / Claude layout
+   LOGIN / SIGNUP PAGE
    ═══════════════════════════════════════════════════ */
 
-function Chat({ onBack }) {
+function LoginPage({ onSuccess, onBack }) {
+  const [mode, setMode] = useState("login"); // "login" or "signup"
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      if (mode === "signup") {
+        // Step 1: Create user in DB
+        const r1 = await api("/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name }),
+        });
+        if (!r1.ok) {
+          const d = await r1.json();
+          throw new Error(d.detail);
+        }
+      }
+
+      // Step 2: Login (creates session + sets cookie)
+      const r2 = await api("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!r2.ok) {
+        const d = await r2.json();
+        throw new Error(d.detail);
+      }
+
+      // Step 3: Fetch user info (cookie is now set)
+      const r3 = await api("/auth/me");
+      if (r3.ok) {
+        const user = await r3.json();
+        onSuccess(user);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <nav className="nav nav--glass">
+        <div className="nav__brand" onClick={onBack} style={{ cursor: "pointer" }}>
+          <span className="nav__mark"><Bolt stroke="white" strokeWidth="2" /></span>
+          <span className="nav__wordmark">AgentFlow</span>
+        </div>
+      </nav>
+
+      <div className="login-center">
+        <motion.div
+          className="login-card"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="login-card__icon">
+            <Bolt stroke="currentColor" strokeWidth="2" />
+          </div>
+          <h2 className="login-card__title">
+            {mode === "login" ? "Welcome back" : "Create your account"}
+          </h2>
+          <p className="login-card__sub">
+            {mode === "login"
+              ? "Enter your email to continue"
+              : "Sign up to start using AgentFlow"}
+          </p>
+
+          <form className="login-form" onSubmit={handleSubmit}>
+            {mode === "signup" && (
+              <input
+                className="login-input"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            )}
+            <input
+              className="login-input"
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            {error && <div className="login-error">{error}</div>}
+
+            <button className="login-submit" type="submit" disabled={loading}>
+              {loading ? "Please wait..." : mode === "login" ? "Log in" : "Sign up"}
+            </button>
+          </form>
+
+          <div className="login-switch">
+            {mode === "login" ? (
+              <>Don't have an account? <button onClick={() => { setMode("signup"); setError(""); }}>Sign up</button></>
+            ) : (
+              <>Already have an account? <button onClick={() => { setMode("login"); setError(""); }}>Log in</button></>
+            )}
+          </div>
+
+          <div className="login-note">
+            Phase 1: Simple email login (no password).<br />
+            Phase 2 will add Google OAuth.
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════
+   CHAT PAGE
+   ═══════════════════════════════════════════════════ */
+
+function Chat({ user, onLogout, onBack }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const endRef = useRef(null);
   const inputRef = useRef(null);
-  const bodyRef = useRef(null);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
-
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
   useEffect(() => { inputRef.current?.focus(); }, []);
 
   const send = useCallback(async (text) => {
@@ -224,81 +306,67 @@ function Chat({ onBack }) {
     setMessages((p) => [...p, { role: "user", text: q }]);
     setLoading(true);
     try {
-      const r = await fetch(API, {
+      const r = await api("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q }),
       });
+      if (r.status === 401) {
+        onLogout();
+        return;
+      }
       const d = await r.json();
       setMessages((p) => [...p, { role: "agent", text: d.answer }]);
     } catch {
-      setMessages((p) => [...p, {
-        role: "agent",
-        text: "Couldn\u2019t reach the server. Is the backend running on port 8000?",
-      }]);
+      setMessages((p) => [...p, { role: "agent", text: "Couldn\u2019t reach the server. Is the backend running?" }]);
     } finally {
       setLoading(false);
       inputRef.current?.focus();
     }
-  }, [input, loading]);
+  }, [input, loading, onLogout]);
 
   const onKey = (e) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  };
+
+  const handleLogout = async () => {
+    await api("/auth/logout", { method: "POST" });
+    onLogout();
   };
 
   const hasMessages = messages.length > 0 || loading;
 
   return (
     <div className="chat-page">
-      {/* Nav */}
       <nav className="nav nav--glass">
         <div className="nav__brand" onClick={onBack} style={{ cursor: "pointer" }}>
           <span className="nav__mark"><Bolt stroke="white" strokeWidth="2" /></span>
           <span className="nav__wordmark">AgentFlow</span>
         </div>
         <div className="nav__right">
-          <button className="nav__btn nav__btn--ghost" onClick={onBack}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
-            Home
+          <span className="nav__user">
+            {user.picture && <img src={user.picture} className="nav__avatar" alt="" />}
+            <span className="nav__user-name">{user.name}</span>
+          </span>
+          <button className="nav__btn nav__btn--ghost" onClick={handleLogout}>
+            Log out
           </button>
         </div>
       </nav>
 
-      {/* Body */}
-      <div className="chat-body" ref={bodyRef}>
+      <div className="chat-body">
         {!hasMessages ? (
           <div className="chat-welcome">
-            <motion.div
-              className="chat-welcome__icon"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-            >
+            <motion.div className="chat-welcome__icon" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
               <Bolt stroke="white" strokeWidth="2" />
             </motion.div>
-            <motion.h2
-              className="chat-welcome__title"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.4 }}
-            >
-              What can I help with?
+            <motion.h2 className="chat-welcome__title" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}>
+              Hi {user.name.split(" ")[0]}, what can I help with?
             </motion.h2>
-            <motion.p
-              className="chat-welcome__sub"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-            >
+            <motion.p className="chat-welcome__sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
               Ask about LangChain, RAG, Python &mdash; or try a math problem.
-              I'll pick the right tool.
             </motion.p>
-            <motion.div
-              className="chat-welcome__chips"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
+            <motion.div className="chat-welcome__chips" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
               {SUGGESTIONS.map((s) => (
                 <button key={s} className="chip" onClick={() => send(s)}>{s}</button>
               ))}
@@ -310,15 +378,13 @@ function Chat({ onBack }) {
               <div className="chat-row" key={i}>
                 <div className={`chat-msg chat-msg--${m.role === "user" ? "user" : "agent"}`}>
                   <div className="chat-msg__avatar">
-                    {m.role === "user" ? "Y" : <Bolt stroke="currentColor" strokeWidth="2" />}
+                    {m.role === "user"
+                      ? user.name.charAt(0).toUpperCase()
+                      : <Bolt stroke="currentColor" strokeWidth="2" />}
                   </div>
                   <div>
-                    <div className="chat-msg__label">
-                      {m.role === "user" ? "You" : "AgentFlow"}
-                    </div>
-                    <div className="chat-msg__text">
-                      <ReactMarkdown>{m.text}</ReactMarkdown>
-                    </div>
+                    <div className="chat-msg__label">{m.role === "user" ? "You" : "AgentFlow"}</div>
+                    <div className="chat-msg__text"><ReactMarkdown>{m.text}</ReactMarkdown></div>
                   </div>
                 </div>
               </div>
@@ -327,72 +393,74 @@ function Chat({ onBack }) {
             {loading && (
               <div className="chat-row">
                 <div className="chat-msg chat-msg--agent">
-                  <div className="chat-msg__avatar">
-                    <Bolt stroke="currentColor" strokeWidth="2" />
-                  </div>
+                  <div className="chat-msg__avatar"><Bolt stroke="currentColor" strokeWidth="2" /></div>
                   <div>
                     <div className="chat-msg__label">AgentFlow</div>
-                    <div className="typing-dots">
-                      <span /><span /><span />
-                    </div>
+                    <div className="typing-dots"><span /><span /><span /></div>
                   </div>
                 </div>
               </div>
             )}
-
             <div ref={endRef} />
           </div>
         )}
       </div>
 
-      {/* Input bar */}
       <div className="chat-input-bar">
         <div className="chat-input-box">
-          <textarea
-            ref={inputRef}
-            placeholder="Message AgentFlow..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKey}
-            rows={1}
-          />
-          <button
-            className="send-btn"
-            onClick={() => send()}
-            disabled={!input.trim() || loading}
-            aria-label="Send"
-          >
-            <SendIcon />
-          </button>
+          <textarea ref={inputRef} placeholder="Message AgentFlow..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKey} rows={1} />
+          <button className="send-btn" onClick={() => send()} disabled={!input.trim() || loading} aria-label="Send"><SendIcon /></button>
         </div>
       </div>
-      <div className="chat-disclaimer">
-        AgentFlow can make mistakes. Verify important information.
-      </div>
+      <div className="chat-disclaimer">AgentFlow can make mistakes. Verify important information.</div>
     </div>
   );
 }
 
 
 /* ═══════════════════════════════════════════════════
-   APP ROUTER
+   APP ROUTER — 3 pages: landing → login → chat
    ═══════════════════════════════════════════════════ */
 
 export default function App() {
   const [page, setPage] = useState("landing");
+  const [user, setUser] = useState(null);
 
-  const goChat = () => { setPage("chat"); window.scrollTo(0, 0); };
+  // On mount: check if already logged in (cookie might exist)
+  useEffect(() => {
+    api("/auth/me")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((u) => { setUser(u); setPage("chat"); })
+      .catch(() => {});
+  }, []);
+
+  const goChat = () => {
+    if (user) { setPage("chat"); }
+    else { setPage("login"); }
+    window.scrollTo(0, 0);
+  };
+
   const goHome = () => { setPage("landing"); window.scrollTo(0, 0); };
+
+  const handleLogin = (u) => { setUser(u); setPage("chat"); window.scrollTo(0, 0); };
+
+  const handleLogout = () => { setUser(null); setPage("landing"); window.scrollTo(0, 0); };
 
   return (
     <AnimatePresence mode="wait">
-      {page === "landing" ? (
+      {page === "landing" && (
         <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
           <Landing onChat={goChat} />
         </motion.div>
-      ) : (
+      )}
+      {page === "login" && (
+        <motion.div key="a" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+          <LoginPage onSuccess={handleLogin} onBack={goHome} />
+        </motion.div>
+      )}
+      {page === "chat" && user && (
         <motion.div key="c" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-          <Chat onBack={goHome} />
+          <Chat user={user} onLogout={handleLogout} onBack={goHome} />
         </motion.div>
       )}
     </AnimatePresence>

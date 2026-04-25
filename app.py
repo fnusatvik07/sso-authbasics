@@ -1,8 +1,10 @@
 """
-FastAPI wrapper for the Agentic RAG chatbot + Google Auth.
+FastAPI wrapper for the Agentic RAG chatbot + Auth.
+
+Phase 1: Simple email login (teaching sessions/cookies)
+Phase 2: Google OAuth (coming next)
 
 Run:  python -m uvicorn app:app --reload
-Test: curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{"question": "What is RAG?"}'
 """
 
 from fastapi import FastAPI, Depends
@@ -27,7 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Wire in auth routes: /auth/google/login, /auth/callback, /auth/logout, /auth/me
+# Wire in auth routes: /auth/signup, /auth/login, /auth/logout, /auth/me
 app.include_router(auth_router)
 
 
