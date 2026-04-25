@@ -29,26 +29,32 @@ Open **https://console.cloud.google.com** and sign in with your Google account.
 2. Click **"Get Started"** or **"Configure Consent Screen"**
 3. Choose User Type: **External** (allows any Google account)
 4. Click **"Create"**
-5. Fill in:
+
+You'll see tabs at the top: **Branding | Audience | Data Access**
+
+**Branding tab:**
+1. Fill in:
    - **App name:** `AgentFlow`
    - **User support email:** select your email
    - **Developer contact email:** your email
-6. Click **"Save and Continue"**
+2. Click **"Save"**
 
-**Scopes page:**
+**Audience tab:**
+1. Under User type, make sure **External** is selected
+2. Under **Test users**, click **"Add Users"**
+3. Add your own Gmail address (and any students who need to test)
+4. Click **"Save"**
+
+Note: While in "Testing" mode, only test users can log in. This is fine for development.
+
+**Data Access tab (this is where scopes live):**
 1. Click **"Add or Remove Scopes"**
-2. Check these three:
-   - `openid`
-   - `userinfo.email`
-   - `userinfo.profile`
-3. Click **"Update"** then **"Save and Continue"**
-
-**Test users page:**
-1. Click **"Add Users"**
-2. Add your own Gmail address
-3. Click **"Save and Continue"**
-
-Click **"Back to Dashboard"**
+2. From the list, check these **three**:
+   - `openid` — "Associate you with your personal info on Google"
+   - `.../auth/userinfo.email` — "See your primary Google Account email address"
+   - `.../auth/userinfo.profile` — "See your personal info..."
+3. Ignore everything else (BigQuery, Analytics, etc.)
+4. Click **"Update"** then **"Save"**
 
 ## Step 4: Create OAuth 2.0 Credentials
 
